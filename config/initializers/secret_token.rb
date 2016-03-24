@@ -1,0 +1,1 @@
+InsalesApp::Application.config.secret_key_base = 'fe25be49356186ef93feb7c1514a9ce8df9ff3797122813a01bef96f860149bba8b0408decedf33e952c8e8907715c138a8fca8b22b3282a326d54ef9e8fd2d4'

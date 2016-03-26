@@ -9,15 +9,13 @@ set :scm, :git
 set :repo_url, 'git@github.com:klishevich/insales_mrjones.git'
 set :assets_roles, [:app]
 set :keep_releases, 5
-set :linked_files, %w{config/database.yml config/secrets.yml config/application.yml config/initializers/insales_api.rb db/production.sqlite3}
+set :linked_files, %w{config/database.yml config/application.yml db/production.sqlite3}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 set :tests, []
 set(:config_files, %w(
   unicorn_init.sh
   database.yml
-  secrets.yml
   application.yml
-  initializers/insales_api.rb
 ))
 set(:executable_config_files, %w(
   unicorn_init.sh

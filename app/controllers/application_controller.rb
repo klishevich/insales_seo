@@ -46,6 +46,11 @@ class ApplicationController < ActionController::Base
   end
 
   def init_authorization account
+    Rails.logger.info('init_authorization')
+    Rails.logger.info('account.insales_subdomain')
+    Rails.logger.info(account.insales_subdomain)
+    Rails.logger.info('account.password')
+    Rails.logger.info(account.password)
     session[:app] = MyApp.new(account.insales_subdomain, account.password)
 
     redirect_to session[:app].authorization_url

@@ -15,7 +15,7 @@ class MainController < ApplicationController
 	request = Net::HTTP::Get.new uri.path
 	# request.body = xml_data
 	# request.content_type = 'text/xml'
-	# request.basic_auth 'mrjones', my_pass
+	request.basic_auth 'mrjones', my_pass
 	response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
 	Rails.logger.info( 'response body:' )
 	Rails.logger.info(response.body)

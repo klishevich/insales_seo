@@ -7,7 +7,7 @@ class MainController < ApplicationController
   def get_products
   	my_subdomain = @account.insales_subdomain
   	my_pass = @account.password
-  	my_url = "http://" + my_subdomain + "/admin/products.xml"
+  	my_url = "http://" + my_subdomain + "/admin/products.json"
 	Rails.logger.info( 'my_url:' )
 	Rails.logger.info(my_url)
   	# xml_data = %{<?xml version="1.0" encoding="UTF-8"?>}

@@ -10,29 +10,29 @@ class ApplicationController < ActionController::Base
 
   def authentication
     logout if enter_from_different_shop?
-    Rails.logger.info('start authentication log')
-    Rails.logger.info('api_key')
-    Rails.logger.info(Figaro.env.insales_api_key)
-    Rails.logger.info('api_secret')
-    Rails.logger.info(Figaro.env.insales_api_secret)
-    Rails.logger.info('api_autologin_url')
-    Rails.logger.info(Figaro.env.insales_api_autologin_url)
+    # Rails.logger.info('start authentication log')
+    # Rails.logger.info('api_key')
+    # Rails.logger.info(Figaro.env.insales_api_key)
+    # Rails.logger.info('api_secret')
+    # Rails.logger.info(Figaro.env.insales_api_secret)
+    # Rails.logger.info('api_autologin_url')
+    # Rails.logger.info(Figaro.env.insales_api_autologin_url)
 
     if current_app and current_app.authorized?
-      Rails.logger.info('if current_app and current_app.authorized?')
-      acc = Account.find_by(insales_subdomain: current_app.shop)
-      Rails.logger.info('acc')
-      Rails.logger.info(acc.insales_subdomain) if acc
+      # Rails.logger.info('if current_app and current_app.authorized?')
+      # acc = Account.find_by(insales_subdomain: current_app.shop)
+      # Rails.logger.info('acc')
+      # Rails.logger.info(acc.insales_subdomain) if acc
       return if @account = Account.find_by(insales_subdomain: current_app.shop)
     end
 
     store_location
 
     if account_by_params
-      Rails.logger.info('account_by_params')
+      # Rails.logger.info('account_by_params')
       init_authorization account_by_params
     else
-      Rails.logger.info('no account_by_params')
+      # Rails.logger.info('no account_by_params')
       redirect_to login_path
     end
   end
@@ -46,11 +46,11 @@ class ApplicationController < ActionController::Base
   end
 
   def init_authorization account
-    Rails.logger.info('init_authorization')
-    Rails.logger.info('account.insales_subdomain')
-    Rails.logger.info(account.insales_subdomain)
-    Rails.logger.info('account.password')
-    Rails.logger.info(account.password)
+    # Rails.logger.info('init_authorization')
+    # Rails.logger.info('account.insales_subdomain')
+    # Rails.logger.info(account.insales_subdomain)
+    # Rails.logger.info('account.password')
+    # Rails.logger.info(account.password)
     session[:app] = MyApp.new(account.insales_subdomain, account.password)
 
     redirect_to session[:app].authorization_url

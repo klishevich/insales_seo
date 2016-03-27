@@ -1,5 +1,6 @@
 InsalesApp::Application.routes.draw do
   root to: 'main#index'
+  get '/get_products', to: 'main#get_products'
 
   resource  :session do
     collection do

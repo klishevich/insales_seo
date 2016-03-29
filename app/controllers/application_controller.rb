@@ -10,20 +10,11 @@ class ApplicationController < ActionController::Base
 
   def authentication
     logout if enter_from_different_shop?
-    # Rails.logger.info('start authentication log')
-    # Rails.logger.info('api_key')
-    # Rails.logger.info(Figaro.env.insales_api_key)
-    # Rails.logger.info('api_secret')
-    # Rails.logger.info(Figaro.env.insales_api_secret)
-    # Rails.logger.info('api_autologin_url')
-    # Rails.logger.info(Figaro.env.insales_api_autologin_url)
 
-    if current_app and current_app.authorized?
-      # Rails.logger.info('if current_app and current_app.authorized?')
-      # acc = Account.find_by(insales_subdomain: current_app.shop)
-      # Rails.logger.info('acc')
-      # Rails.logger.info(acc.insales_subdomain) if acc
-      return if @account = Account.find_by(insales_subdomain: current_app.shop)
+    # if current_app and current_app.authorized?
+    if true
+      # return if @account = Account.find_by(insales_subdomain: current_app.shop)
+      return if @account = Account.find_by(insales_subdomain: 'busation.myinsales.ru')
     end
 
     store_location

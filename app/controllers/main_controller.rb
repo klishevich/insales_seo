@@ -32,21 +32,12 @@ class MainController < ApplicationController
   def seo_filters_update
   	sfu = SeoFiltersUpdate.new
   	sfu.account = @account
-	collection_filters = sfu.get_collection_filters
-	collections = sfu.get_collections
-	collection_filters.each do |el|
-		temp = el['collection_id']
-		# puts temp
-		# puts collections
-		# puts collections[0]
-		el['url']=collections[temp]+ '/' + el['permalink']
-	end
-	puts collection_filters
-	products = sfu.get_products
-    # puts products
-    puts products.count
-    puts products.first
-    puts sfu.filter_products(1482648,'1')
+  	sfu.get_products
+  	sfu.get_seofilters
+  	sfu.calc_product_links
+    # puts sfu.products.first["title"]
+    # puts sfu.filter_products(1482648,'1')
+    @myresult = sfu.product_links
   end
 
 end

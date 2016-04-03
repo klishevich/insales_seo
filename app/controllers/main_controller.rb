@@ -9,6 +9,8 @@ class MainController < ApplicationController
 	Rails.logger.info("!!!! arr_index")
 	Rails.logger.info(params[:arr_index])
   	sfu = ObjectSpace.each_object(SeoFiltersUpdate).to_a.last
+  	Rails.logger.info("!!!! found SeoFiltersUpdate")
+  	Rails.logger.info("sfu.product_links")
   	if (sfu.nil?)
   		redirect_to '/'
   	else

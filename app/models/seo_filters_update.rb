@@ -49,6 +49,46 @@ class SeoFiltersUpdate
 		Rails.logger.info(@product_links)
 	end
 
+	def put_product_by_index(ar_ind)
+		ar_index = ar_ind.to_i
+		# puts "ar_index #{ar_index}" 
+		# puts "@product_links[ar_index]"
+		# puts @product_links[ar_index]["product_id"]
+		product_id = @product_links[ar_index]["product_id"]
+		# puts "product_id #{product_id}"
+		product_url = @product_links[ar_index]["url"]
+		product_link_text = @product_links[ar_index]["link_text"]
+		product_a_link = "<div><a href=#{"https://"+subdomain+product_url}>#{product_link_text}</a></div>"
+		# puts "product_link_text #{product_link_text}"
+		my_subdomain = @account.insales_subdomain
+		my_pass = @account.password
+		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
+		# Rails.logger.info( 'my_url:' )
+		# Rails.logger.info(my_url)
+		json_data = {
+			"id" => product_id,
+			"description" => product_a_link
+			}.to_json
+		uri = URI.parse(my_url)
+		request = Net::HTTP::Put.new uri.path
+		Rails.logger.info(' Request body: ')
+		request.body = json_data
+		Rails.logger.info(json_data)
+		request.content_type = 'application/json'
+		request.basic_auth 'mrjones', my_pass
+		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
+		Rails.logger.info( 'response body:' )
+		Rails.logger.info(response.body)
+		res = JSON.parse(response.body)
+		# puts res
+		Rails.logger.info("------- 4) put_product_by_index -------")
+		Rails.logger.info('request.body')
+		Rails.logger.info(request.body)
+		Rails.logger.info('response.body')
+		Rails.logger.info(res)
+		res
+	end
+
 	private
 	# int, string
 	def filter_products(property_id, property_value)

@@ -1,5 +1,13 @@
-<h1>Список товаров</h1>
-<p>Количество product_links</p>
-<p><%= @myresult.count %></p>
-<p>JSON с результатом</p>
+<h1>2 шаг. Обновление товаров</h1>
+<%= link_to '---> ОБНОВИТЬ ВСЕ ТОВАРЫ <---', '#' %>
+<h2>Ссылки для следующих товаров будут добавлены/обновлены</h2>
+<p>Количество товаров для которых будут обновленны ссылки <%=@myresult.uniq{|el| el["product_id"]}.count %></p>
+<p>Количество ссылок которые будут вставлены <%=@myresult.count %></p>
+<% @myresult.each_with_index do |res,index|%>
+  <%= raw(show_product_url(res)) %>
+  <%= form_tag(put_one_product_path, method: 'get') do %>
+      <p><%= hidden_field_tag(:arr_index, value = index) %></p>
+      <p><%= submit_tag('Обновить этот товар') %></p>
+  <% end %>
+<% end %>
 <p><%= @myresult.to_s %></p>

@@ -11,19 +11,17 @@ class ApplicationController < ActionController::Base
   def authentication
     logout if enter_from_different_shop?
 
-    # if current_app and current_app.authorized?
-    if true
-      # return if @account = Account.find_by(insales_subdomain: current_app.shop)
-      return if @account = Account.find_by(insales_subdomain: 'busation.myinsales.ru')
+    if current_app and current_app.authorized?
+    # if true
+      return if @account = Account.find_by(insales_subdomain: current_app.shop)
+      # return if @account = Account.find_by(insales_subdomain: 'busation.myinsales.ru')
     end
 
     store_location
 
     if account_by_params
-      # Rails.logger.info('account_by_params')
       init_authorization account_by_params
     else
-      # Rails.logger.info('no account_by_params')
       redirect_to login_path
     end
   end
@@ -37,11 +35,6 @@ class ApplicationController < ActionController::Base
   end
 
   def init_authorization account
-    # Rails.logger.info('init_authorization')
-    # Rails.logger.info('account.insales_subdomain')
-    # Rails.logger.info(account.insales_subdomain)
-    # Rails.logger.info('account.password')
-    # Rails.logger.info(account.password)
     session[:app] = MyApp.new(account.insales_subdomain, account.password)
 
     redirect_to session[:app].authorization_url

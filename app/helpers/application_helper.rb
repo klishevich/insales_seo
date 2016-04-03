@@ -19,6 +19,14 @@ module ApplicationHelper
   end
 
   def app_name
-    'Мое приложение'
+    'MrJones приложение'
   end
+
+  def show_product_url(product)
+    "<div class='outer'>
+      <div><b>#{product["product_id"]}: #{product["product_title"]}</b></div>
+      <div><a href=#{"https://"+@account.insales_subdomain+product["url"]}>#{product["link_text"]}</a></div>
+    </div>"
+  end
+
 end

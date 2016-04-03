@@ -5,7 +5,9 @@ class MainController < ApplicationController
   end
 
   def put_one_product
-  	puts ObjectSpace.each_object(SeoFiltersUpdate).to_a
+  	# puts ObjectSpace.each_object(SeoFiltersUpdate).to_a
+	Rails.logger.info("!!!! arr_index")
+	Rails.logger.info(params[:arr_index])
   	sfu = ObjectSpace.each_object(SeoFiltersUpdate).to_a.last
   	if (sfu.nil?)
   		redirect_to '/'

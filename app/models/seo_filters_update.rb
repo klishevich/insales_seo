@@ -114,13 +114,15 @@ class SeoFiltersUpdate
 		request.basic_auth module_name, pass
 		response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
 		collection_filters = JSON.parse(response.body)
+		Rails.logger.info("------- get_collection_filters collection_filters #{collection_filters.count} -------")
+		Rails.logger.info(collection_filters)
 		collection_filters2 = collection_filters.map do |filter|
 			h = {}
 			h['collection_id'] = filter['collection_id']
 			h['permalink'] = filter['permalink']
 			h['link_text'] = filter['meta_keywords']
-			h['property_id'] = filter['characteristis'][0]['property_id']
-			h['property_value'] = filter['characteristis'][0]['title']
+			h['property_id'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['property_id'] : -1
+			h['property_value'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['title'] : -1
 			h
 		end
 		Rails.logger.info("------- get_collection_filters collection_filters2 #{collection_filters2.count} -------")

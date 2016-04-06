@@ -2,10 +2,12 @@ class SeoFiltersUpdate
 	attr_accessor :account, :products, :seofilters, :product_links
 
 	def get_products
-		per_page="?per_page=100"
+		updated_since = Time.now.strftime("%Y%m%d").to_s
+		per_page='200'
+		page_params="?per_page=#{per_page}&updated_since=#{updated_since}"
 		url = "http://" + subdomain + "/admin/products.json"
 		uri = URI.parse(url)
-		request = Net::HTTP::Get.new (uri.path + per_page)
+		request = Net::HTTP::Get.new (uri.path + page_params)
 		request.basic_auth module_name, pass
 		response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
 		@products = JSON.parse(response.body)

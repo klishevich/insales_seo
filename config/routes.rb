@@ -1,9 +1,8 @@
 InsalesApp::Application.routes.draw do
   root to: 'main#index'
-  get '/get_products', to: 'main#get_products'
-  get '/put_one_product', to: 'main#put_one_product'
   get '/seo_filters_update', to: 'main#seo_filters_update'
-
+  get '/put_one_product', to: 'main#put_one_product'
+  get '/put_all_products', to: 'main#put_all_products'
 
   resource  :session do
     collection do

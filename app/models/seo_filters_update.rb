@@ -2,7 +2,8 @@ class SeoFiltersUpdate
 	attr_accessor :account, :products, :seofilters, :product_links
 
 	def get_products
-		updated_since = Time.now.strftime("%Y%m%d").to_s
+		# updated_since = Time.now.strftime("%Y%m%d").to_s
+		updated_since = (7.days.ago).strftime("%Y%m%d").to_s
 		per_page='200'
 		page_params="?per_page=#{per_page}&updated_since=#{updated_since}"
 		url = "http://" + subdomain + "/admin/products.json"
@@ -46,7 +47,21 @@ class SeoFiltersUpdate
 				product_links.push(temp_hash)
 			end
 		end
-		@product_links = product_links.sort_by { |hsh| hsh["product_id"] } 
+		# sorted_product_links = product_links.sort_by { |hsh| hsh["product_id"] } 
+		# prev_prod_id = -1
+		# curr_prod_id = -1
+		# sorted_product_links.each do |prodlink|
+		# 	curr_prod_id = prodlink["product_id"]
+		# 	if (curr_prod_id!=prev_prod_id)
+		# 		temp_hash = Hash.new
+		# 		temp_hash["product_id"]=curr_prod_id
+		# 		temp_hash["product_links"]=[]
+		# 		unique_product_links.push(temp_hash)
+		# 	end
+		# 	unique_product_links[curr_prod_id]
+		# end
+		# @product_links = product_links.sort_by { |hsh| hsh["product_id"] }  
+		@product_links = product_links.group_by{|h| h["product_id"]}.values
 		Rails.logger.info("------- 3) calc_product_links @product_links #{@product_links.count} -------")
 		Rails.logger.info(@product_links)
 	end
@@ -56,12 +71,15 @@ class SeoFiltersUpdate
 		# puts "ar_index #{ar_index}" 
 		# puts "@product_links[ar_index]"
 		# puts @product_links[ar_index]["product_id"]
-		product_id = @product_links[ar_index]["product_id"]
+		product_id = @product_links[ar_index][0]["product_id"]
 		# puts "product_id #{product_id}"
-		product_url = @product_links[ar_index]["url"]
-		product_link_text = @product_links[ar_index]["link_text"]
-		product_a_link = "<div><a href=#{"https://"+subdomain+product_url}>#{product_link_text}</a></div>"
-		# puts "product_link_text #{product_link_text}"
+		product_a_link = ""
+		@product_links[ar_index].each do |prod_link|
+			product_url = prod_link["url"]
+			product_link_text = prod_link["link_text"]
+			product_a_link += "<div><a href=#{product_url}>#{product_link_text}</a></div>"
+		end
+		puts "product_a_link #{product_a_link}"
 		my_subdomain = @account.insales_subdomain
 		my_pass = @account.password
 		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
@@ -122,7 +140,7 @@ class SeoFiltersUpdate
 			h = {}
 			h['collection_id'] = filter['collection_id']
 			h['permalink'] = filter['permalink']
-			h['link_text'] = filter['meta_keywords']
+			h['link_text'] = filter['meta_keywords'] ? filter['meta_keywords'] : filter['title']
 			h['property_id'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['property_id'] : -1
 			h['property_value'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['title'] : -1
 			h

@@ -29,4 +29,13 @@ module ApplicationHelper
     </div>"
   end
 
+  def show_product_url2(product_arr)
+    product = product_arr[0]
+    cnt = product_arr.count
+    "<div class='outer'>
+      <div><b>#{product["product_id"]}: #{product["product_title"]}</b></div>
+      <div>Количество ссылок, будет обновлено: #{cnt}</d
+    </div>"
+  end
+
 end

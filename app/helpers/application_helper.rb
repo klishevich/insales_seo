@@ -25,7 +25,8 @@ module ApplicationHelper
   def show_product_url(product)
     "<div class='outer'>
       <div><b>#{product["product_id"]}: #{product["product_title"]}</b></div>
-      <div><a href=#{"https://"+@account.insales_subdomain+product["url"]}>#{product["link_text"]}</a></div>
+      <div>Требует обновления: #{product["need_update"]}</div>
+      #{product["product_links"]}
     </div>"
   end
 

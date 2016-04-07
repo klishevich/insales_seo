@@ -1,9 +1,9 @@
 class SeoFiltersUpdate
-	attr_accessor :account, :products, :seofilters, :product_links
+	attr_accessor :account, :products, :seofilters, :products_links
 
 	def get_products
 		# updated_since = Time.now.strftime("%Y%m%d").to_s
-		updated_since = (7.days.ago).strftime("%Y%m%d").to_s
+		updated_since = (30.days.ago).strftime("%Y%m%d").to_s
 		per_page='200'
 		page_params="?per_page=#{per_page}&updated_since=#{updated_since}"
 		url = "http://" + subdomain + "/admin/products.json"
@@ -16,6 +16,8 @@ class SeoFiltersUpdate
 			temp_hash = Hash.new
 			temp_hash["id"] = p["id"]
 			temp_hash["title"] = p["title"]
+			# temp_hash["description"] = p["description"]
+			temp_hash["collections_ids"] = p["collections_ids"]
 			temp_hash
 		end
 		Rails.logger.info("------- 1) get_products @products count #{@products.count} -------")
@@ -34,71 +36,60 @@ class SeoFiltersUpdate
 		Rails.logger.info(@seofilters)
 	end
 
-	def calc_product_links
-		product_links = Array.new
-		@seofilters.each do |sf|
-			pr = filter_products(sf["property_id"], sf["property_value"])
-			pr.each do |product|
-				temp_hash = Hash.new
-				temp_hash["product_id"] = product["product_id"]
-				temp_hash["product_title"] = product["product_title"]
-				temp_hash["url"] = sf["url"]
-				temp_hash["link_text"] = sf["link_text"]
-				product_links.push(temp_hash)
+	def calc_products_links
+		products_links = Array.new
+		@products.each do |product|
+			product_desc = product["description"]
+			product_desc ||= ""
+			plinks = calc_product_links(product)
+			temp_hash = Hash.new
+			temp_hash["product_id"] = product["id"]
+			temp_hash["product_title"] = product["title"]
+			temp_hash["product_links"] = plinks
+			if (product_desc != plinks)
+				temp_hash["need_update"] = true
+			else
+				temp_hash["need_update"] = false
 			end
+			products_links.push(temp_hash)		
 		end
-		# sorted_product_links = product_links.sort_by { |hsh| hsh["product_id"] } 
-		# prev_prod_id = -1
-		# curr_prod_id = -1
-		# sorted_product_links.each do |prodlink|
-		# 	curr_prod_id = prodlink["product_id"]
-		# 	if (curr_prod_id!=prev_prod_id)
+		# @seofilters.each do |sf|
+		# 	pr = filter_products(sf["property_id"], sf["property_value"])
+		# 	pr.each do |product|
 		# 		temp_hash = Hash.new
-		# 		temp_hash["product_id"]=curr_prod_id
-		# 		temp_hash["product_links"]=[]
-		# 		unique_product_links.push(temp_hash)
+		# 		temp_hash["product_id"] = product["product_id"]
+		# 		temp_hash["product_title"] = product["product_title"]
+		# 		temp_hash["url"] = sf["url"]
+		# 		temp_hash["link_text"] = sf["link_text"]
+		# 		product_links.push(temp_hash)
 		# 	end
-		# 	unique_product_links[curr_prod_id]
-		# end
-		# @product_links = product_links.sort_by { |hsh| hsh["product_id"] }  
-		@product_links = product_links.group_by{|h| h["product_id"]}.values
-		Rails.logger.info("------- 3) calc_product_links @product_links #{@product_links.count} -------")
-		Rails.logger.info(@product_links)
+		# end 
+		@products_links = products_links
+		Rails.logger.info("------- 3) calc_products_links @products_links #{@products_links.count} -------")
+		Rails.logger.info(@products_links)
 	end
 
 	def put_product_by_index(ar_ind)
 		ar_index = ar_ind.to_i
-		# puts "ar_index #{ar_index}" 
-		# puts "@product_links[ar_index]"
-		# puts @product_links[ar_index]["product_id"]
-		product_id = @product_links[ar_index][0]["product_id"]
-		# puts "product_id #{product_id}"
-		product_a_link = ""
-		@product_links[ar_index].each do |prod_link|
-			product_url = prod_link["url"]
-			product_link_text = prod_link["link_text"]
-			product_a_link += "<div><a href=#{product_url}>#{product_link_text}</a></div>"
-		end
-		puts "product_a_link #{product_a_link}"
+		product_id = @products_links[ar_index]["product_id"]
+		product_links = @products_links[ar_index]["product_links"]
 		my_subdomain = @account.insales_subdomain
 		my_pass = @account.password
 		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
-		# Rails.logger.info( 'my_url:' )
-		# Rails.logger.info(my_url)
 		json_data = {
 			"id" => product_id,
-			"description" => product_a_link
+			"description" => product_links
 			}.to_json
 		uri = URI.parse(my_url)
 		request = Net::HTTP::Put.new uri.path
-		Rails.logger.info(' Request body: ')
+		# Rails.logger.info(' Request body: ')
 		request.body = json_data
-		Rails.logger.info(json_data)
+		# Rails.logger.info(json_data)
 		request.content_type = 'application/json'
 		request.basic_auth 'mrjones', my_pass
 		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
-		Rails.logger.info( 'response body:' )
-		Rails.logger.info(response.body)
+		# Rails.logger.info( 'response body:' )
+		# Rails.logger.info(response.body)
 		res = JSON.parse(response.body)
 		# puts res
 		Rails.logger.info("------- 4) put_product_by_index -------")
@@ -109,22 +100,34 @@ class SeoFiltersUpdate
 		res
 	end
 
-	private
-	# int, string
-	def filter_products(property_id, property_value)
-		temp=Set.new
-		@products.each do |p|
-			characteristics = p["characteristics"]
-			characteristics.each do |c|
-				if (c["property_id"] == property_id) && (c["title"] == property_value)
-					temp_hash = Hash.new
-					temp_hash["product_id"] = p["id"]
-					temp_hash["product_title"] = p["title"]
-					temp.add(temp_hash) 
-				end
+	def put_all_products
+		@products_links.each_with_index do |product, index|
+			if product["need_update"] == true
+				put_product_by_index(index)
+				Rails.logger.info("-------  put_all_products #{index}: #{product["product_id"]} #{product["product_name"]}-------")
 			end
 		end
-		temp.to_a
+		return @products_links.select {|ch| ch["need_update"] == true }
+	end
+
+	private
+
+	def calc_product_links(product)
+		product_a_link = ""
+		@seofilters.each do |sf|
+			collection_id = sf["collection_id"]
+			property_id = sf["property_id"]
+			property_value = sf["property_value"]
+			if (product["collections_ids"].include? collection_id) && 
+				(product["characteristics"].select {|ch| ch["property_id"] == property_id && ch["title"] == property_value}.count > 0)
+				product_url = sf["url"]
+				product_link_text = sf["link_text"]
+				product_a_link += "<span><a href=#{product_url}>#{product_link_text}</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>"
+			end
+		end
+		Rails.logger.info("------- calc_product_links product_a_link #{product["title"]} #{product["id"]} #{product_a_link} -------")
+		Rails.logger.info(@product_links)
+		return product_a_link
 	end
 
 	def get_collection_filters
@@ -134,8 +137,8 @@ class SeoFiltersUpdate
 		request.basic_auth module_name, pass
 		response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
 		collection_filters = JSON.parse(response.body)
-		Rails.logger.info("------- get_collection_filters collection_filters #{collection_filters.count} -------")
-		Rails.logger.info(collection_filters)
+		# Rails.logger.info("------- get_collection_filters collection_filters #{collection_filters.count} -------")
+		# Rails.logger.info(collection_filters)
 		collection_filters2 = collection_filters.map do |filter|
 			h = {}
 			h['collection_id'] = filter['collection_id']
@@ -177,4 +180,21 @@ class SeoFiltersUpdate
 	def module_name
 		'mrjones'
 	end
+
+	# int, string
+	# def filter_products(property_id, property_value)
+	# 	temp=Set.new
+	# 	@products.each do |p|
+	# 		characteristics = p["characteristics"]
+	# 		characteristics.each do |c|
+	# 			if (c["property_id"] == property_id) && (c["title"] == property_value)
+	# 				temp_hash = Hash.new
+	# 				temp_hash["product_id"] = p["id"]
+	# 				temp_hash["product_title"] = p["title"]
+	# 				temp.add(temp_hash) 
+	# 			end
+	# 		end
+	# 	end
+	# 	temp.to_a
+	# end
 end

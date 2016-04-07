@@ -10,10 +10,10 @@ class MainController < ApplicationController
     sfu.account = @account
     sfu.get_products
     sfu.get_seofilters
-    sfu.calc_product_links
+    sfu.calc_products_links
     # puts sfu.products.first["title"]
     # puts sfu.filter_products(1482648,'1')
-    @myresult = sfu.product_links
+    @myresult = sfu.products_links
   end
 
   def put_one_product
@@ -32,5 +32,12 @@ class MainController < ApplicationController
   end
 
   def put_all_products
+    sfu = ObjectSpace.each_object(SeoFiltersUpdate).to_a.last
+    if (sfu.nil?)
+      redirect_to '/'
+    else
+      @myresult = sfu.put_all_products
+    end
+    @myresult
   end
 end

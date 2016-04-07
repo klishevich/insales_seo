@@ -1,9 +1,9 @@
 <h1>2 шаг. Обновление товаров</h1>
-<%= link_to '---> ОБНОВИТЬ ВСЕ ТОВАРЫ <---', '#' %>
+<%= link_to '---> ОБНОВИТЬ ВСЕ ТОВАРЫ <---', put_all_products_path %>
 <h2>Ссылки для следующих товаров будут добавлены/обновлены</h2>
 <p>Количество товаров для которых будут обновленны ссылки <%=@myresult.count %></p>
 <% @myresult.each_with_index do |res,index|%>
-  <%= raw(show_product_url2(res)) %>
+  <%= raw(show_product_url(res)) %>
   <%= form_tag(put_one_product_path, method: 'get') do %>
       <p><%= hidden_field_tag(:arr_index, value = index) %></p>
       <p><%= submit_tag('Обновить этот товар') %></p>

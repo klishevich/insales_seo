@@ -95,16 +95,16 @@ class SeoFiltersUpdate
 		Rails.logger.info("------- 4) put_product_by_index -------")
 		Rails.logger.info('request.body')
 		Rails.logger.info(request.body)
-		Rails.logger.info('response.body')
-		Rails.logger.info(res)
+		# Rails.logger.info('response.body')
+		# Rails.logger.info(res)
 		res
 	end
 
 	def put_all_products
 		@products_links.each_with_index do |product, index|
 			if product["need_update"] == true
+				Rails.logger.info("-------  put_all_products index #{index}, product_id #{product["product_id"]}, product_title #{product["product_title"]}-------")
 				put_product_by_index(index)
-				Rails.logger.info("-------  put_all_products #{index}: #{product["product_id"]} #{product["product_name"]}-------")
 			end
 		end
 		return @products_links.select {|ch| ch["need_update"] == true }

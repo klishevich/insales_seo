@@ -101,13 +101,20 @@ class SeoFiltersUpdate
 	end
 
 	def put_all_products
+		updated_products = Array.new
 		@products_links.each_with_index do |product, index|
 			if product["need_update"] == true
+				temp_hash = Hash.new
+				temp_hash["index"] = index
+				temp_hash["product_id"] = product["product_id"]
+				temp_hash["product_title"] = product["product_title"]
+				temp_hash["product_links"] = product["product_links"]
+				updated_products.push(temp_hash)
 				Rails.logger.info("-------  put_all_products index #{index}, product_id #{product["product_id"]}, product_title #{product["product_title"]}-------")
 				put_product_by_index(index)
 			end
 		end
-		return @products_links.select {|ch| ch["need_update"] == true }
+		return updated_products
 	end
 
 	private

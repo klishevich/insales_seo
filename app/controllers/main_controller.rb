@@ -40,4 +40,13 @@ class MainController < ApplicationController
     end
     @myresult
   end
+
+  def put_all_products2
+    sfu = SeoFiltersUpdate.new
+    sfu.account = @account
+    sfu.get_products
+    sfu.get_seofilters
+    sfu.calc_products_links
+    @myresult = sfu.put_all_products
+  end
 end

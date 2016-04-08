@@ -3,6 +3,7 @@ InsalesApp::Application.routes.draw do
   get '/seo_filters_update', to: 'main#seo_filters_update'
   get '/put_one_product', to: 'main#put_one_product'
   get '/put_all_products', to: 'main#put_all_products'
+  get '/put_all_products2', to: 'main#put_all_products2'
 
   resource  :session do
     collection do

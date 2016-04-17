@@ -18,14 +18,14 @@ class ApplicationController < ActionController::Base
     Rails.logger.info('api_autologin_url')
     Rails.logger.info(Figaro.env.insales_api_autologin_url)
 
-    if current_app and current_app.authorized?
-    # if true
+    # if current_app and current_app.authorized?
+    if true
       Rails.logger.info('if current_app and current_app.authorized?')
       acc = Account.find_by(insales_subdomain: current_app.shop)
       Rails.logger.info('acc')
       Rails.logger.info(acc.insales_subdomain) if acc
-      return if @account = Account.find_by(insales_subdomain: current_app.shop)
-      # return if @account = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
+      # return if @account = Account.find_by(insales_subdomain: current_app.shop)
+      return if @account = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
       # return if @account = Account.find_by(insales_subdomain: 'busation.myinsales.ru')
     end
 

@@ -9,7 +9,7 @@ class SeoFiltersUpdate
 		url = "http://" + subdomain + "/admin/products.json"
 		uri = URI.parse(url)
 		el_count = 250
-		updated_since = (30.days.ago).strftime("%Y%m%d").to_s
+		updated_since = (14.days.ago).strftime("%Y%m%d").to_s
 		while (el_count > 0 && page < 20) do
 			page_params="?per_page=#{per_page.to_s}&page=#{page.to_s}&updated_since=#{updated_since}"
 			Rails.logger.info("page_params #{page_params}")

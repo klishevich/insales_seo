@@ -19,7 +19,7 @@ class SeoFiltersUpdate
 			page+=1
 			el_count = parse_products.count
 			Rails.logger.info("------- get_products while -------")
-			Rails.logger.info("parse_products #{parse_products}")
+			# Rails.logger.info("parse_products #{parse_products}")
 			Rails.logger.info("@products.count #{@products.count}")
 			Rails.logger.info("page_params #{page_params}")
 		end

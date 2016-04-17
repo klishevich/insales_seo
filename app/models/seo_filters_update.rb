@@ -2,6 +2,7 @@ class SeoFiltersUpdate
 	attr_accessor :account, :products, :seofilters, :products_links
 
 	def get_products
+		Rails.logger.info("------- 1) start get_products -------")
 		@products = Array.new
 		per_page=250
 		page=1
@@ -11,34 +12,32 @@ class SeoFiltersUpdate
 		updated_since = (30.days.ago).strftime("%Y%m%d").to_s
 		while (el_count > 0 && page < 20) do
 			page_params="?per_page=#{per_page.to_s}&page=#{page.to_s}&updated_since=#{updated_since}"
+			Rails.logger.info("page_params #{page_params}")
 			request = Net::HTTP::Get.new (uri.path + page_params)
 			request.basic_auth module_name, pass
 			response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
 			parse_products = JSON.parse(response.body)
-			@products += parse_products
+			# @products += parse_products
+			parse_products.each {|i| @products << i }
 			page+=1
 			el_count = parse_products.count
-			Rails.logger.info("------- get_products while -------")
+			# Rails.logger.info("------- get_products while -------")
 			# Rails.logger.info("parse_products #{parse_products}")
 			Rails.logger.info("@products.count #{@products.count}")
-			Rails.logger.info("page_params #{page_params}")
 		end
-		# updated_since = Time.now.strftime("%Y%m%d").to_s
-		# updated_since = (30.days.ago).strftime("%Y%m%d").to_s
-		# page_params="?per_page=#{per_page}&updated_since=#{updated_since}"
-		temp_products = @products.map do |p|
-			temp_hash = Hash.new
-			temp_hash["id"] = p["id"]
-			temp_hash["title"] = p["title"]
-			# temp_hash["description"] = p["description"]
-			temp_hash["collections_ids"] = p["collections_ids"]
-			return temp_hash
-		end
-		Rails.logger.info("------- 1) get_products @products count #{@products.count} -------")
-		Rails.logger.info(temp_products)
+		# temp_products = @products.map do |p|
+		# 	temp_hash = Hash.new
+		# 	temp_hash["id"] = p["id"]
+		# 	temp_hash["title"] = p["title"]
+		# 	temp_hash["collections_ids"] = p["collections_ids"]
+		# 	return temp_hash
+		# end
+		Rails.logger.info("------- 1) finish get_products @products.count #{@products.count} -------")
+		# Rails.logger.info(temp_products)
 	end
 
 	def get_seofilters
+		Rails.logger.info("------- 2) start get_seofilters -------")
 		collection_filters = get_collection_filters
 		collections = get_collections
 		collection_filters.each do |el|
@@ -46,30 +45,29 @@ class SeoFiltersUpdate
 			el['url']=collections[temp]+ '/' + el['permalink']
 		end
 		@seofilters = collection_filters
-		Rails.logger.info("------- 2) get_seofilters @seofilters #{@seofilters.count} -------")
-		Rails.logger.info(@seofilters)
+		Rails.logger.info("------- 2) finish get_seofilters @seofilters.count #{@seofilters.count} -------")
+		# Rails.logger.info(@seofilters)
 	end
 
 	def calc_products_links
+		Rails.logger.info("------- 3) start calc_products_links -------")
 		products_links = Array.new
 		@products.each do |product|
 			product_desc = product["description"]
 			product_desc ||= ""
 			plinks = calc_product_links(product)
-			temp_hash = Hash.new
-			temp_hash["product_id"] = product["id"]
-			temp_hash["product_title"] = product["title"]
-			temp_hash["product_links"] = plinks
 			if (product_desc != plinks)
+				temp_hash = Hash.new
+				temp_hash["product_id"] = product["id"]
+				temp_hash["product_title"] = product["title"]
+				temp_hash["product_links"] = plinks
 				temp_hash["need_update"] = true
 				products_links.push(temp_hash)
-			else
-				temp_hash["need_update"] = false
 			end	
 		end
 		@products_links = products_links
-		Rails.logger.info("------- 3) calc_products_links @products_links #{@products_links.count} -------")
-		Rails.logger.info(@products_links)
+		Rails.logger.info("------- 3) finish calc_products_links @products_links.count #{@products_links.count} -------")
+		# Rails.logger.info(@products_links)
 	end
 
 	def put_product_by_index(ar_ind)
@@ -128,8 +126,8 @@ class SeoFiltersUpdate
 				product_a_link += "<span><a href=#{product_url}>#{product_link_text}</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>"
 			end
 		end
-		Rails.logger.info("------- calc_product_links product_a_link #{product["title"]} #{product["id"]} #{product_a_link} -------")
-		Rails.logger.info(@product_links)
+		# Rails.logger.info("------- calc_product_links product_a_link #{product["title"]} #{product["id"]} #{product_a_link} -------")
+		# Rails.logger.info(@product_links)
 		return product_a_link
 	end
 

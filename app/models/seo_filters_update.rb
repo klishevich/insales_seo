@@ -1,16 +1,19 @@
 class SeoFiltersUpdate
 	attr_accessor :account, :products, :seofilters, :products_links
+	
+	def initialize
+	   @products = Array.new
+	end
 
 	def get_products
 		Rails.logger.info("------- 1) start get_products -------")
-		@products = Array.new
 		per_page=250
 		page=1
 		url = "http://" + subdomain + "/admin/products.json"
 		uri = URI.parse(url)
 		el_count = 250
 		updated_since = (14.days.ago).strftime("%Y%m%d").to_s
-		while (el_count > 0 && page < 20) do
+		while (el_count > 0 && page < 10) do
 			page_params="?per_page=#{per_page.to_s}&page=#{page.to_s}&updated_since=#{updated_since}"
 			Rails.logger.info("page_params #{page_params}")
 			request = Net::HTTP::Get.new (uri.path + page_params)
@@ -39,11 +42,14 @@ class SeoFiltersUpdate
 	def get_product(id)
 		Rails.logger.info("------- 1) start get_product -------")
 		url = "http://" + subdomain + "/admin/products/" + id.to_s + ".json"
+		Rails.logger.info("url #{url}")
 		uri = URI.parse(url)
 		request = Net::HTTP::Get.new (uri.path)
 		request.basic_auth module_name, pass
 		response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
 		parse_product = JSON.parse(response.body)
+		Rails.logger.info("parse_product #{parse_product}")
+		@products << parse_product
 		Rails.logger.info(parse_product.to_json)
 		Rails.logger.info("------- 1) finish get_product -------")
 	end
@@ -139,6 +145,7 @@ class SeoFiltersUpdate
 			"id" => product_id,
 			"product_field_values" => [
 				{
+					"id" => 32184773,
 					"product_field_id" => 31206,
 					"value" => product_links 
 				}
@@ -151,12 +158,12 @@ class SeoFiltersUpdate
 		request.basic_auth 'mrjones', my_pass
 		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
 		res = JSON.parse(response.body)
-		Rails.logger.info("------- 4) put_product_by_index -------")
+		Rails.logger.info("------- 4) put_product_by_index2 -------")
 		Rails.logger.info('request.body')
 		Rails.logger.info(request.body)
 		Rails.logger.info('response.body')
-		Rails.logger.info(res)
-		res
+		Rails.logger.info(response.body)
+		return res
 	end
 
 	def put_all_products

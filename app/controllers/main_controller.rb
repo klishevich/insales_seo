@@ -6,7 +6,9 @@ class MainController < ApplicationController
   end
 
   def seo_filters_update
-    sfu = SeoFiltersUpdate.new
+    days_upd_since = params[:days].to_i
+    page_num = params[:page].to_i
+    sfu = SeoFiltersUpdate.new(days_upd_since,page_num)
     sfu.account = @account
     sfu.get_products
     sfu.get_seofilters
@@ -51,11 +53,20 @@ class MainController < ApplicationController
   end
 
   def put_all_products2
-    sfu = SeoFiltersUpdate.new
-    sfu.account = @account
-    sfu.get_products
-    sfu.get_seofilters
-    sfu.calc_products_links
-    @myresult = sfu.put_all_products
+    days_upd_since = params[:days].to_i
+    page_num = 1
+    el_count = 250
+    products_updated = []
+    while (el_count > 0 && page_num < 40) do
+      sfu = SeoFiltersUpdate.new(days_upd_since,page_num)
+      sfu.account = @account
+      sfu.get_products
+      sfu.get_seofilters
+      sfu.calc_products_links
+      res = sfu.put_all_products
+      products_updated += res
+      page_num+=1
+    end
+    @myresult = products_updated
   end
 end

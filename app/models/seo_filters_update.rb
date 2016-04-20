@@ -1,39 +1,32 @@
 class SeoFiltersUpdate
-	attr_accessor :account, :products, :seofilters, :products_links
+	attr_accessor :account, :products, :seofilters, :products_links, :page_num, :days_upd_since
 	
-	def initialize
+	def initialize(days_upd_since=14, page_num=1)
 	   @products = Array.new
+	   @page_num = page_num
+	   @days_upd_since = days_upd_since
 	end
 
 	def get_products
 		Rails.logger.info("------- 1) start get_products -------")
 		per_page=250
-		page=1
+		page=@page_num
 		url = "http://" + subdomain + "/admin/products.json"
 		uri = URI.parse(url)
-		el_count = 250
-		updated_since = (14.days.ago).strftime("%Y%m%d").to_s
-		while (el_count > 0 && page < 10) do
-			page_params="?per_page=#{per_page.to_s}&page=#{page.to_s}&updated_since=#{updated_since}"
-			Rails.logger.info("page_params #{page_params}")
-			request = Net::HTTP::Get.new (uri.path + page_params)
-			request.basic_auth module_name, pass
-			response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
-			parse_products = JSON.parse(response.body)
-			# @products += parse_products
-			parse_products.each {|i| @products << i }
-			page+=1
-			el_count = parse_products.count
-			# Rails.logger.info("------- get_products while -------")
-			# Rails.logger.info("parse_products #{parse_products}")
-			Rails.logger.info("@products.count #{@products.count}")
-		end
-		# temp_products = @products.map do |p|
-		# 	temp_hash = Hash.new
-		# 	temp_hash["id"] = p["id"]
-		# 	temp_hash["title"] = p["title"]
-		# 	temp_hash["collections_ids"] = p["collections_ids"]
-		# 	return temp_hash
+		# el_count = 250
+		updated_since = (@days_upd_since.days.ago).strftime("%Y%m%d").to_s
+		# while (el_count > 0 && page < 10) do
+		page_params="?per_page=#{per_page.to_s}&page=#{page.to_s}&updated_since=#{updated_since}"
+		Rails.logger.info("page_params #{page_params}")
+		request = Net::HTTP::Get.new (uri.path + page_params)
+		request.basic_auth module_name, pass
+		response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
+		parse_products = JSON.parse(response.body)
+		@products = parse_products
+		# parse_products.each {|i| @products << i }
+		# page+=1
+		el_count = parse_products.count
+		Rails.logger.info("@products.count #{@products.count}")
 		# end
 		Rails.logger.info("------- 1) finish get_products @products.count #{@products.count} -------")
 		# Rails.logger.info(temp_products)

@@ -57,10 +57,12 @@ class MainController < ApplicationController
     page_num = 1
     el_count = 250
     products_updated = []
-    while (el_count > 0 && page_num < 40) do
+    while (el_count == 250 && page_num <= 40) do
+      Rails.logger.info("--------------- put_all_products2 page_num #{page_num} ---------------")
       sfu = SeoFiltersUpdate.new(days_upd_since,page_num)
       sfu.account = @account
-      sfu.get_products
+      prod = sfu.get_products
+      el_count = sfu.products.count
       sfu.get_seofilters
       sfu.calc_products_links
       res = sfu.put_all_products
@@ -68,5 +70,6 @@ class MainController < ApplicationController
       page_num+=1
     end
     @myresult = products_updated
+    @count_prod = (page_num - 2)*250 + el_count
   end
 end

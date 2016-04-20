@@ -67,14 +67,12 @@ class SeoFiltersUpdate
 			product_desc = product["description"]
 			product_desc ||= ""
 			plinks = calc_product_links(product)
-			if (product_desc != plinks)
-				temp_hash = Hash.new
-				temp_hash["product_id"] = product["id"]
-				temp_hash["product_title"] = product["title"]
-				temp_hash["product_links"] = plinks
-				temp_hash["need_update"] = true
-				products_links.push(temp_hash)
-			end	
+			temp_hash = Hash.new
+			temp_hash["product_id"] = product["id"]
+			temp_hash["product_title"] = product["title"]
+			temp_hash["product_links"] = plinks
+			temp_hash["need_update"] = (product_desc != plinks) ? true : false
+			products_links.push(temp_hash)
 		end
 		@products_links = products_links
 		Rails.logger.info("------- 3) finish calc_products_links @products_links.count #{@products_links.count} -------")

@@ -84,14 +84,20 @@ class SeoFiltersUpdate
 		products_links = Array.new
 		@products.each do |product|
 			#hardcode seo product_field_id = 31206
-			product_seo = product["product_field_values"].select {|pfv| pfv["product_field_id"] == 31206 }.first
-			product_seo ||= ""
+			product_field_value_item = product["product_field_values"].select {|pfv| pfv["product_field_id"] == product_field_id_seo }.first
+			product_field_value_item_id = 0
+			product_field_value_item_value = ""
+			if !product_field_value_item.nil?
+				product_field_value_item_id = product_field_value_item["id"]
+				product_field_value_item_value = product_field_value_item["value"]
+			end
 			plinks = calc_product_links2(product)
-			if (product_seo != plinks)
+			if (product_field_value_item_value != plinks)
 				temp_hash = Hash.new
 				temp_hash["product_id"] = product["id"]
 				temp_hash["product_title"] = product["title"]
 				temp_hash["product_links"] = plinks
+				temp_hash["product_field_value_item_id"] = product_field_value_item_id
 				temp_hash["need_update"] = true
 				products_links.push(temp_hash)
 			end	
@@ -129,18 +135,15 @@ class SeoFiltersUpdate
 		ar_index = ar_ind.to_i
 		product_id = @products_links[ar_index]["product_id"]
 		product_links = @products_links[ar_index]["product_links"]
+		product_field_value_item_id = @products_links[ar_index]["product_field_value_item_id"]
 		my_subdomain = @account.insales_subdomain
 		my_pass = @account.password
 		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
+		product_field_value_hash = { "product_field_id" => product_field_id_seo, "value" => product_links }
+		product_field_value_hash["id"]=product_field_value_item_id if product_field_value_item_id != 0
 		json_data = {
 			"id" => product_id,
-			"product_field_values" => [
-				{
-					"id" => 32184773,
-					"product_field_id" => 31206,
-					"value" => product_links 
-				}
-			]
+			"product_field_values_attributes" => [product_field_value_hash]
 			}.to_json
 		uri = URI.parse(my_url)
 		request = Net::HTTP::Put.new uri.path
@@ -168,7 +171,8 @@ class SeoFiltersUpdate
 				temp_hash["product_links"] = product["product_links"]
 				updated_products.push(temp_hash)
 				Rails.logger.info("-------  put_all_products index #{index}, product_id #{product["product_id"]}, product_title #{product["product_title"]}-------")
-				put_product_by_index(index)
+				# put_product_by_index(index)
+				put_product_by_index2(index)
 			end
 		end
 		return updated_products
@@ -259,6 +263,10 @@ class SeoFiltersUpdate
 
 	def module_name
 		'mrjones'
+	end
+
+	def product_field_id_seo
+		return 31206
 	end
 
 end

@@ -34,12 +34,12 @@ class MainController < ApplicationController
     sfu.account = @account
     sfu.get_product(product_id)
     sfu.get_seofilters
-    sfu.calc_products_links
-    # sfu.calc_products_links2
-    @myresult = sfu.put_product_by_index(0)
-    # @myresult = sfu.put_product_by_index2(0)
-    render 'put_one_product'
-    # render 'put_one_product2'
+    # sfu.calc_products_links
+    sfu.calc_products_links2
+    # @myresult = sfu.put_product_by_index(0)
+    @myresult = sfu.put_product_by_index2(0)
+    # render 'put_one_product'
+    render 'put_one_product2'
   end
 
   def put_all_products
@@ -64,7 +64,7 @@ class MainController < ApplicationController
       prod = sfu.get_products
       el_count = sfu.products.count
       sfu.get_seofilters
-      sfu.calc_products_links
+      sfu.calc_products_links2
       res = sfu.put_all_products
       products_updated += res
       page_num+=1

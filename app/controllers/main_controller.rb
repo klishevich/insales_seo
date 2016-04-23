@@ -64,6 +64,7 @@ class MainController < ApplicationController
       prod = sfu.get_products
       el_count = sfu.products.count
       sfu.get_seofilters
+      # sfu.calc_products_links
       sfu.calc_products_links2
       res = sfu.put_all_products
       products_updated += res

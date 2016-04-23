@@ -67,6 +67,7 @@ class SeoFiltersUpdate
 			product_desc = product["description"]
 			product_desc ||= ""
 			plinks = calc_product_links(product)
+			# plinks = ""
 			temp_hash = Hash.new
 			temp_hash["product_id"] = product["id"]
 			temp_hash["product_title"] = product["title"]
@@ -171,8 +172,8 @@ class SeoFiltersUpdate
 				temp_hash["product_links"] = product["product_links"]
 				updated_products.push(temp_hash)
 				Rails.logger.info("-------  put_all_products index #{index}, product_id #{product["product_id"]}, product_title #{product["product_title"]}-------")
-				# put_product_by_index(index)
-				put_product_by_index2(index)
+				put_product_by_index(index)
+				# put_product_by_index2(index)
 			end
 		end
 		return updated_products

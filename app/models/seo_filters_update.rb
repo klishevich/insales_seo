@@ -60,8 +60,8 @@ class SeoFiltersUpdate
 		# Rails.logger.info(@seofilters)
 	end
 
-	def calc_products_links
-		Rails.logger.info("------- 3) start calc_products_links -------")
+	def calc_products_description_links
+		Rails.logger.info("------- 3) start calc_products_description_links -------")
 		products_links = Array.new
 		@products.each do |product|
 			product_desc = product["description"]
@@ -76,12 +76,12 @@ class SeoFiltersUpdate
 			products_links.push(temp_hash)
 		end
 		@products_links = products_links
-		Rails.logger.info("------- 3) finish calc_products_links @products_links.count #{@products_links.count} -------")
+		Rails.logger.info("------- 3) finish calc_products_description_links @products_links.count #{@products_links.count} -------")
 		# Rails.logger.info(@products_links)
 	end
 
-	def calc_products_links2
-		Rails.logger.info("------- 3) start calc_products_links2 -------")
+	def calc_products_field_value_links
+		Rails.logger.info("------- 3) start calc_products_field_value_links -------")
 		products_links = Array.new
 		@products.each do |product|
 			#hardcode seo product_field_id = 31206
@@ -104,11 +104,11 @@ class SeoFiltersUpdate
 			end	
 		end
 		@products_links = products_links
-		Rails.logger.info("------- 3) finish calc_products_links2 @products_links.count #{@products_links.count} -------")
+		Rails.logger.info("------- 3) finish calc_products_field_value_links @products_links.count #{@products_links.count} -------")
 		# Rails.logger.info(@products_links)
 	end
 
-	def put_product_by_index(ar_ind)
+	def put_product_description_by_index(ar_ind)
 		ar_index = ar_ind.to_i
 		product_id = @products_links[ar_index]["product_id"]
 		product_links = @products_links[ar_index]["product_links"]
@@ -126,13 +126,13 @@ class SeoFiltersUpdate
 		request.basic_auth 'mrjones', my_pass
 		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
 		res = JSON.parse(response.body)
-		Rails.logger.info("------- 4) put_product_by_index -------")
+		Rails.logger.info("------- 4) put_product_description_by_index -------")
 		Rails.logger.info('request.body')
 		Rails.logger.info(request.body)
 		res
 	end
 
-	def put_product_by_index2(ar_ind)
+	def put_product_field_value_by_index(ar_ind)
 		ar_index = ar_ind.to_i
 		product_id = @products_links[ar_index]["product_id"]
 		product_links = @products_links[ar_index]["product_links"]
@@ -153,7 +153,7 @@ class SeoFiltersUpdate
 		request.basic_auth 'mrjones', my_pass
 		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
 		res = JSON.parse(response.body)
-		Rails.logger.info("------- 4) put_product_by_index2 -------")
+		Rails.logger.info("------- 4) put_product_field_value_by_index -------")
 		Rails.logger.info('request.body')
 		Rails.logger.info(request.body)
 		Rails.logger.info('response.body')
@@ -172,8 +172,8 @@ class SeoFiltersUpdate
 				temp_hash["product_links"] = product["product_links"]
 				updated_products.push(temp_hash)
 				Rails.logger.info("-------  put_all_products index #{index}, product_id #{product["product_id"]}, product_title #{product["product_title"]}-------")
-				put_product_by_index(index)
-				# put_product_by_index2(index)
+				# put_product_description_by_index(index)
+				put_product_field_value_by_index(index)
 			end
 		end
 		return updated_products

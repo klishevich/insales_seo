@@ -12,8 +12,8 @@ class MainController < ApplicationController
     sfu.account = @account
     sfu.get_products
     sfu.get_seofilters
-    sfu.calc_products_links
-    # sfu.calc_products_links2
+    sfu.calc_products_description_links
+    # sfu.calc_products_field_value_links
     @myresult = sfu.products_links
   end
 
@@ -22,8 +22,8 @@ class MainController < ApplicationController
   	if (sfu.nil?)
   		redirect_to '/'
   	else
-  		@myresult = sfu.put_product_by_index(params[:arr_index])
-      # @myresult = sfu.put_product_by_index2(params[:arr_index])
+  		@myresult = sfu.put_product_description_by_index(params[:arr_index])
+      # @myresult = sfu.put_product_field_value_by_index(params[:arr_index])
   	end
   	@myresult
   end
@@ -34,10 +34,10 @@ class MainController < ApplicationController
     sfu.account = @account
     sfu.get_product(product_id)
     sfu.get_seofilters
-    # sfu.calc_products_links
-    sfu.calc_products_links2
-    # @myresult = sfu.put_product_by_index(0)
-    @myresult = sfu.put_product_by_index2(0)
+    # sfu.calc_products_description_links
+    sfu.calc_products_field_value_links
+    # @myresult = sfu.put_product_description_by_index(0)
+    @myresult = sfu.put_product_field_value_by_index(0)
     # render 'put_one_product'
     render 'put_one_product2'
   end
@@ -64,8 +64,8 @@ class MainController < ApplicationController
       prod = sfu.get_products
       el_count = sfu.products.count
       sfu.get_seofilters
-      # sfu.calc_products_links
-      sfu.calc_products_links2
+      # sfu.calc_products_description_links
+      sfu.calc_products_field_value_links
       res = sfu.put_all_products
       products_updated += res
       page_num+=1

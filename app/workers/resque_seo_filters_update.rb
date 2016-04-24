@@ -1,15 +1,19 @@
 class ResqueSeoFiltersUpdate
   @queue = :seo_pages_queue
 
-  def self.perform(account_id,days_upd_since,page_num)
-    Rails.logger.info("--------------- ResqueSeoFiltersUpdate page_num #{page_num} ---------------")
-	sfu = SeoFiltersUpdate.new(days_upd_since,page_num)
-	sfu.account = @account
-	sfu.set_account_by_id(account_id)
+  def self.perform(subdomain, pass, days_upd_since, page_num)
+    # Resque.logger.info("--------------- ResqueSeoFiltersUpdate start page_num ---------------")
+    Logger.new('log/resque.log').info("----- ResqueSeoFiltersUpdate start -----")
+    Logger.new('log/resque.log').info("page_num #{page_num} subdomain #{subdomain}")
+	sfu = SeoFiltersUpdate.new(subdomain, pass, days_upd_since, page_num)
 	sfu.get_products
 	sfu.get_seofilters
+	products_cnt = sfu.products.count
 	# sfu.calc_products_description_links
 	sfu.calc_products_field_value_links
+	products_to_update = sfu.products_links.count
 	sfu.put_all_products
+    Logger.new('log/resque.log').info("products_cnt #{products_cnt}, products_to_update #{products_to_update}")
+    Logger.new('log/resque.log').info("----- ResqueSeoFiltersUpdate finish -----")
   end
 end

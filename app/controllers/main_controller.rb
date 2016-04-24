@@ -8,7 +8,7 @@ class MainController < ApplicationController
   def seo_filters_update
     days_upd_since = params[:days].to_i
     page_num = params[:page].to_i
-    sfu = SeoFiltersUpdate.new(days_upd_since,page_num)
+    sfu = SeoFiltersUpdate.new(subdomain, pass, days_upd_since, page_num)
     sfu.account = @account
     sfu.get_products
     sfu.get_seofilters
@@ -30,7 +30,7 @@ class MainController < ApplicationController
 
   def put_one_product2
     product_id = params[:product_id]
-    sfu = SeoFiltersUpdate.new
+    sfu = SeoFiltersUpdate.new(subdomain, pass)
     sfu.account = @account
     sfu.get_product(product_id)
     sfu.get_seofilters
@@ -57,12 +57,11 @@ class MainController < ApplicationController
     page_num = 1
     el_count = 250
     products_updated = []
-    while (el_count == 250 && page_num <= 40) do
+    while (el_count == 250 && page_num <= 20) do
       Rails.logger.info("--------------- put_all_products2 Resque.enqueue page_num #{page_num} ---------------")
-      Resque.enqueue(ResqueSeoFiltersUpdate, @account.id, days_upd_since, page_num)      
+      Resque.enqueue(ResqueSeoFiltersUpdate, subdomain, pass, days_upd_since, page_num)      
       # Rails.logger.info("--------------- put_all_products2 page_num #{page_num} ---------------")
-      # sfu = SeoFiltersUpdate.new(days_upd_since,page_num)
-      # sfu.account = @account
+      # sfu = SeoFiltersUpdate.new(subdomain, pass, days_upd_since,page_num)
       # prod = sfu.get_products
       # el_count = sfu.products.count
       # sfu.get_seofilters
@@ -72,7 +71,18 @@ class MainController < ApplicationController
       # products_updated += res
       page_num+=1
     end
-    @myresult = 'Enqueued'#products_updated
-    @count_prod = 'In process'#(page_num - 2)*250 + el_count
+    @myresult = 'Enqueued'
+    @count_prod = 'In process'
   end
+
+  private
+
+  def subdomain
+    @account.insales_subdomain
+  end
+
+  def pass
+    @account.password
+  end
+    
 end

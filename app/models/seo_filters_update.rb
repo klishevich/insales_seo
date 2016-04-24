@@ -1,18 +1,19 @@
 class SeoFiltersUpdate
-	attr_accessor :account, :products, :seofilters, :products_links, :page_num, :days_upd_since
+	attr_accessor :subdomain, :pass, :account, 
+		:products, :seofilters, :products_links, :page_num, :days_upd_since
 	
-	def initialize(days_upd_since=14, page_num=1)
+	def initialize(subdomain, pass, days_upd_since=14, page_num=1)
+	   @subdomain = subdomain
+	   @pass = pass
 	   @products = Array.new
 	   @page_num = page_num
 	   @days_upd_since = days_upd_since
 	end
 
-	def set_account_by_id(id)
-		@account = Account.where(id: id)
-	end
-
 	def get_products
 		Rails.logger.info("------- 1) start get_products -------")
+	    Resque.logger.info("------- 1) start get_products -------")
+	    Logger.new('log/resque.log').info("test test")
 		per_page=250
 		page=@page_num
 		url = "http://" + subdomain + "/admin/products.json"
@@ -116,8 +117,8 @@ class SeoFiltersUpdate
 		ar_index = ar_ind.to_i
 		product_id = @products_links[ar_index]["product_id"]
 		product_links = @products_links[ar_index]["product_links"]
-		my_subdomain = @account.insales_subdomain
-		my_pass = @account.password
+		my_subdomain = @subdomain
+		my_pass = @pass
 		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
 		json_data = {
 			"id" => product_id,
@@ -141,8 +142,8 @@ class SeoFiltersUpdate
 		product_id = @products_links[ar_index]["product_id"]
 		product_links = @products_links[ar_index]["product_links"]
 		product_field_value_item_id = @products_links[ar_index]["product_field_value_item_id"]
-		my_subdomain = @account.insales_subdomain
-		my_pass = @account.password
+		my_subdomain = @subdomain
+		my_pass = @pass
 		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
 		product_field_value_hash = { "product_field_id" => product_field_id_seo, "value" => product_links }
 		product_field_value_hash["id"]=product_field_value_item_id if product_field_value_item_id != 0
@@ -256,14 +257,6 @@ class SeoFiltersUpdate
 		Rails.logger.info("------- get_collections collections2 #{collections2.count} -------")
 		Rails.logger.info(collections2)
 		collections2
-	end  
-
-	def subdomain
-		@account.insales_subdomain
-	end
-
-	def pass
-		@account.password
 	end
 
 	def module_name

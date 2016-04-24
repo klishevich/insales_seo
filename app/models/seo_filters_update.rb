@@ -7,6 +7,10 @@ class SeoFiltersUpdate
 	   @days_upd_since = days_upd_since
 	end
 
+	def set_account_by_id(id)
+		@account = Account.where(id: id)
+	end
+
 	def get_products
 		Rails.logger.info("------- 1) start get_products -------")
 		per_page=250

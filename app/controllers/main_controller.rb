@@ -57,7 +57,7 @@ class MainController < ApplicationController
     page_num = 1
     el_count = 250
     products_updated = []
-    while (el_count == 250 && page_num <= 20) do
+    while (el_count == 250 && page_num <= 40) do
       Rails.logger.info("--------------- put_all_products2 Resque.enqueue page_num #{page_num} ---------------")
       Resque.enqueue(ResqueSeoFiltersUpdate, subdomain, pass, days_upd_since, page_num)      
       # Rails.logger.info("--------------- put_all_products2 page_num #{page_num} ---------------")
@@ -71,8 +71,7 @@ class MainController < ApplicationController
       # products_updated += res
       page_num+=1
     end
-    @myresult = 'Enqueued'
-    @count_prod = 'In process'
+    render 'put_all_products3'
   end
 
   private

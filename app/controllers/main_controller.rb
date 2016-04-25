@@ -71,7 +71,10 @@ class MainController < ApplicationController
       # products_updated += res
       page_num+=1
     end
-    render 'put_all_products3'
+    redirect_to '/put_all_products_result'
+  end
+
+  def put_all_products_result
   end
 
   private

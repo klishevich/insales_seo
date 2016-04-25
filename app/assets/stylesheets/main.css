@@ -359,3 +359,8 @@ div.imports_history {
 div.imports_history a {
     text-decoration: none;
 }
+
+input.green {
+	color: white;
+    background: green;
+}

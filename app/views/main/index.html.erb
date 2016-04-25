@@ -1,8 +1,8 @@
 <h2>Обновление всех товаров</h2>
-<%= form_tag(put_all_products2_path, method: 'get') do %>
+<%= form_tag(put_all_products2_path, method: 'post') do %>
   <p><%= label_tag(:days, "Товары, которые были обновлены за этот период") %></p>
   <p><%= text_field_tag(:days, 14) %></p> 
-  <p><%= submit_tag('Обновить все товары') %></p>
+  <p><%= submit_tag('Обновить все товары', class: 'green') %></p>
 <% end %>
 <hr/>
 <h2>Сформировать список товаров для обновления</h2>

@@ -4,7 +4,8 @@ InsalesApp::Application.routes.draw do
   get '/put_one_product', to: 'main#put_one_product'
   get '/put_one_product2', to: 'main#put_one_product2'
   get '/put_all_products', to: 'main#put_all_products'
-  get '/put_all_products2', to: 'main#put_all_products2'
+  post '/put_all_products2', to: 'main#put_all_products2'
+  get '/put_all_products_result', to: 'main#put_all_products_result'
 
   resource  :session do
     collection do

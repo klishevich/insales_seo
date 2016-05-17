@@ -139,30 +139,33 @@ class SeoFiltersUpdate
 
 	def put_product_field_value_by_index(ar_ind)
 		ar_index = ar_ind.to_i
-		product_id = @products_links[ar_index]["product_id"]
-		product_links = @products_links[ar_index]["product_links"]
-		product_field_value_item_id = @products_links[ar_index]["product_field_value_item_id"]
-		my_subdomain = @subdomain
-		my_pass = @pass
-		my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
-		product_field_value_hash = { "product_field_id" => product_field_id_seo, "value" => product_links }
-		product_field_value_hash["id"]=product_field_value_item_id if product_field_value_item_id != 0
-		json_data = {
-			"id" => product_id,
-			"product_field_values_attributes" => [product_field_value_hash]
-			}.to_json
-		uri = URI.parse(my_url)
-		request = Net::HTTP::Put.new uri.path
-		request.body = json_data
-		request.content_type = 'application/json'
-		request.basic_auth 'mrjones', my_pass
-		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
-		res = JSON.parse(response.body)
-		Rails.logger.info("------- 4) put_product_field_value_by_index -------")
-		Rails.logger.info('request.body')
-		Rails.logger.info(request.body)
-		Rails.logger.info('response.body')
-		Rails.logger.info(response.body)
+		res = "ссылка не требует обновления"
+		if !@products_links[ar_index].nil?
+			product_id = @products_links[ar_index]["product_id"]
+			product_links = @products_links[ar_index]["product_links"]
+			product_field_value_item_id = @products_links[ar_index]["product_field_value_item_id"]
+			my_subdomain = @subdomain
+			my_pass = @pass
+			my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
+			product_field_value_hash = { "product_field_id" => product_field_id_seo, "value" => product_links }
+			product_field_value_hash["id"]=product_field_value_item_id if product_field_value_item_id != 0
+			json_data = {
+				"id" => product_id,
+				"product_field_values_attributes" => [product_field_value_hash]
+				}.to_json
+			uri = URI.parse(my_url)
+			request = Net::HTTP::Put.new uri.path
+			request.body = json_data
+			request.content_type = 'application/json'
+			request.basic_auth 'mrjones', my_pass
+			response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
+			res = JSON.parse(response.body)
+			Rails.logger.info("------- 4) put_product_field_value_by_index -------")
+			Rails.logger.info('request.body')
+			Rails.logger.info(request.body)
+			Rails.logger.info('response.body')
+			Rails.logger.info(response.body)
+		end
 		return res
 	end
 

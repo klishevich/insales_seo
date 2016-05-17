@@ -139,7 +139,7 @@ class SeoFiltersUpdate
 
 	def put_product_field_value_by_index(ar_ind)
 		ar_index = ar_ind.to_i
-		res = "ссылка не требует обновления"
+		res = {"product_field_values" => "Ссылка не требует обновления"}
 		if !@products_links[ar_index].nil?
 			product_id = @products_links[ar_index]["product_id"]
 			product_links = @products_links[ar_index]["product_links"]

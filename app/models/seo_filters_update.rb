@@ -204,18 +204,27 @@ class SeoFiltersUpdate
 		return product_a_link
 	end
 
+	# for calc_products_field_value_links
 	def calc_product_links2(product)
 		product_a_link = ""
 		@seofilters.each do |sf|
 			collection_id = sf["collection_id"]
-			property_id = sf["property_id"]
-			property_value = sf["property_value"]
-			if (product["collections_ids"].include? collection_id) && 
-				(product["characteristics"].select {|ch| ch["property_id"] == property_id && ch["title"] == property_value}.count > 0)
-				product_url = sf["url"]
-				product_link_text = sf["link_text"]
-				product_a_link += "<span><a href=#{product_url}>#{product_link_text}</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>"
-			end
+			# property_id = sf["property_id"]
+			# property_value = sf["property_value"]
+			cnt = sf['characteristis'].count 
+			cnt_ok = 0
+			if (cnt > 0) && (product["collections_ids"].include? collection_id)
+				sf['characteristis'].each do |char_i|
+					if (product["characteristics"].select {|ch| ch["property_id"] == char_i["property_id"] && ch["title"] == char_i["title"] }.count > 0)
+						cnt_ok += 1
+					end
+				end
+				if (cnt == cnt_ok)
+					product_url = sf["url"]
+					product_link_text = sf["link_text"]
+					product_a_link += "<span><a href=#{product_url}>#{product_link_text}</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>"
+				end
+			end 
 		end
 		# Rails.logger.info("------- calc_product_links product_a_link #{product["title"]} #{product["id"]} #{product_a_link} -------")
 		# Rails.logger.info(@product_links)
@@ -234,8 +243,9 @@ class SeoFiltersUpdate
 			h['collection_id'] = filter['collection_id']
 			h['permalink'] = filter['permalink']
 			h['link_text'] = filter['meta_keywords'] ? filter['meta_keywords'] : filter['title']
-			h['property_id'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['property_id'] : -1
-			h['property_value'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['title'] : -1
+			h['characteristis'] = filter['characteristis']
+			# h['property_id'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['property_id'] : -1
+			# h['property_value'] = filter['characteristis'].count > 0 ? filter['characteristis'][0]['title'] : -1
 			h
 		end
 		Rails.logger.info("------- get_collection_filters collection_filters2 #{collection_filters2.count} -------")

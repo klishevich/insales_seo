@@ -15,6 +15,7 @@ gem 'actionpack-xml_parser'
 gem 'unicorn'
 gem 'figaro'
 gem 'resque'
+gem 'pg'
 group :development do
     gem 'capistrano',         require: false
     gem 'capistrano-rvm',     require: false

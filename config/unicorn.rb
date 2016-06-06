@@ -1,10 +1,10 @@
-root = "/home/mike/apps/insales_mrjones_production/current"
+root = "/home/mike/apps/insales_seo_production/current"
 working_directory root
 pid "#{root}/tmp/pids/unicorn.pid"
 stderr_path "#{root}/log/unicorn.log"
 stdout_path "#{root}/log/unicorn.log"
 
-listen "/tmp/unicorn.insales_mrjones_production.sock"
+listen "/tmp/unicorn.insales_seo_production.sock"
 worker_processes 2
 timeout 300
 

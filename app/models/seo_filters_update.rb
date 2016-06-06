@@ -273,7 +273,7 @@ class SeoFiltersUpdate
 	end
 
 	def module_name
-		'mrjones'
+		'seosales'
 	end
 
 	def product_field_id_seo

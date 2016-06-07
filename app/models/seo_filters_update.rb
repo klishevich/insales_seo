@@ -128,7 +128,7 @@ class SeoFiltersUpdate
 		request = Net::HTTP::Put.new uri.path
 		request.body = json_data
 		request.content_type = 'application/json'
-		request.basic_auth 'mrjones', my_pass
+		request.basic_auth module_name, my_pass
 		response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
 		res = JSON.parse(response.body)
 		Rails.logger.info("------- 4) put_product_description_by_index -------")
@@ -157,7 +157,7 @@ class SeoFiltersUpdate
 			request = Net::HTTP::Put.new uri.path
 			request.body = json_data
 			request.content_type = 'application/json'
-			request.basic_auth 'mrjones', my_pass
+			request.basic_auth module_name, my_pass
 			response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request request }
 			res = JSON.parse(response.body)
 			Rails.logger.info("------- 4) put_product_field_value_by_index -------")

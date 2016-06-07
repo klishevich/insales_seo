@@ -12,8 +12,7 @@ class SeoFiltersUpdate
 
 	def get_products
 		Rails.logger.info("------- 1) start get_products -------")
-	    Resque.logger.info("------- 1) start get_products -------")
-	    Logger.new('log/resque.log').info("test test")
+	    Logger.new('log/resque.log').info("------- 1) start get_products -------")
 		per_page=250
 		page=@page_num
 		url = "http://" + subdomain + "/admin/products.json"

@@ -8,6 +8,7 @@ class ResqueSeoFiltersUpdate
 	sfu = SeoFiltersUpdate.new(subdomain, pass, days_upd_since, page_num)
 	sfu.get_products
 	products_cnt = sfu.products.count
+	Logger.new('log/resque.log').info("products_cnt #{products_cnt}")
 	products_to_update = -1
 	if products_cnt > 0
 		sfu.get_seofilters

@@ -20,3 +20,12 @@
   <p><%= text_field_tag(:product_id, nil ) %></p>
   <p><%= submit_tag('Обновить этот товар') %></p>
 <% end %>
+<h2>Информация об очереди</h2>
+<p><b>Общая инфа:</b></p>
+<div>
+  <%= @rinfo %>
+</div>
+<p><b>Очередь:</b></p>
+<div>
+  <%= @rqueues %>
+</div>

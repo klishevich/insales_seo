@@ -3,6 +3,8 @@ require 'net/http'
 class MainController < ApplicationController
   
   def index
+    @rinfo = Resque.info
+    @rqueues = Resque.queues
   end
 
   def seo_filters_update

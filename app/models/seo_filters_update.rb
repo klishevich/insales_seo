@@ -276,7 +276,8 @@ class SeoFiltersUpdate
 	end
 
 	def product_field_id_seo
-		return 31206
+		# return 31206
+		@account.account_info.seo_field_identifier
 	end
 
 end

@@ -27,4 +27,12 @@ class Account < ActiveRecord::Base
   	return d.strftime('%d.%m.%Y')
   end
 
+  def max_page_num
+    num = 1
+    if self.account_info
+      num = self.account_info.max_products_count / 250 + 1
+    end
+    return num
+  end
+
 end

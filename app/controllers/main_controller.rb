@@ -15,7 +15,6 @@ class MainController < ApplicationController
     sfu.get_products
     sfu.get_seofilters
     sfu.calc_products_description_links
-    # sfu.calc_products_field_value_links
     @myresult = sfu.products_links
   end
 
@@ -25,7 +24,6 @@ class MainController < ApplicationController
   		redirect_to '/'
   	else
   		@myresult = sfu.put_product_description_by_index(params[:arr_index])
-      # @myresult = sfu.put_product_field_value_by_index(params[:arr_index])
   	end
   	@myresult
   end
@@ -36,11 +34,8 @@ class MainController < ApplicationController
     sfu.account = @account
     sfu.get_product(product_id)
     sfu.get_seofilters
-    # sfu.calc_products_description_links
     sfu.calc_products_field_value_links
-    # @myresult = sfu.put_product_description_by_index(0)
     @myresult = sfu.put_product_field_value_by_index(0)
-    # render 'put_one_product'
     render 'put_one_product2'
   end
 
@@ -59,7 +54,7 @@ class MainController < ApplicationController
     page_num = 1
     el_count = 250
     products_updated = []
-    while (el_count == 250 && page_num <= 40) do
+    while (el_count == 250 && page_num <= @account.max_page_num) do
       Rails.logger.info("--------------- put_all_products2 Resque.enqueue page_num #{page_num} ---------------")
       Resque.enqueue(ResqueSeoFiltersUpdate, subdomain, pass, days_upd_since, page_num)      
       # Rails.logger.info("--------------- put_all_products2 page_num #{page_num} ---------------")

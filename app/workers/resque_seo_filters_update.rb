@@ -2,7 +2,6 @@ class ResqueSeoFiltersUpdate
   @queue = :seo_pages_queue
 
   def self.perform(subdomain, pass, days_upd_since, page_num)
-    # Resque.logger.info("--------------- ResqueSeoFiltersUpdate start page_num ---------------")
     Logger.new('log/resque.log').info("----- ResqueSeoFiltersUpdate start -----")
     Logger.new('log/resque.log').info("page_num #{page_num} subdomain #{subdomain}")
 	sfu = SeoFiltersUpdate.new(subdomain, pass, days_upd_since, page_num)

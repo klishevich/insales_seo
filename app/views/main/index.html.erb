@@ -5,8 +5,9 @@
     <p>Максимальное кол-во товаров: <%= @account.account_info.max_products_count %></p>
     <p>Кол-во дней для автообновления: <%= @account.account_info.day_to_update %></p>
     <p>Дата последнего обновления: <%= @account.last_seo_update %></p>
+    <p>ID SEO поля в InSales: <%= @account.account_info.seo_field_identifier %></p>
   <hr/>
-  <h2>Обновление товаров</h2>
+  <h2>Ручное обновление товаров</h2>
   <%= form_tag(put_all_products2_path, method: 'post') do %>
     <p><%= label_tag(:days, "Количество дней для ручного обновления") %></p>
     <p><%= text_field_tag(:days, @account.account_info.day_to_update) %></p> 

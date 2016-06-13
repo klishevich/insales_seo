@@ -1,18 +1,19 @@
 class SeoFiltersUpdate
 	attr_accessor :subdomain, :pass, :account, 
-		:products, :seofilters, :products_links, :page_num, :days_upd_since
+		:products, :seofilters, :products_links, :page_num, :days_upd_since, :product_field_id_seo
 	
-	def initialize(subdomain, pass, days_upd_since=14, page_num=1)
+	def initialize(subdomain, pass, product_field_id_seo, days_upd_since=14, page_num=1)
 	   @subdomain = subdomain
 	   @pass = pass
 	   @products = Array.new
+	   @product_field_id_seo = product_field_id_seo
 	   @page_num = page_num
 	   @days_upd_since = days_upd_since
 	end
 
 	def get_products
 		Rails.logger.info("------- 1) start get_products -------")
-	    Logger.new('log/resque.log').info("------- 1) start get_products -------")
+	    Logger.new('log/resque.log').info("1) start get_products")
 		per_page=250
 		page=@page_num
 		url = "http://" + subdomain + "/admin/products.json"
@@ -33,6 +34,7 @@ class SeoFiltersUpdate
 		Rails.logger.info("@products.count #{@products.count}")
 		# end
 		Rails.logger.info("------- 1) finish get_products @products.count #{@products.count} -------")
+		Logger.new('log/resque.log').info("1) finish get_products @products.count #{@products.count}")
 		# Rails.logger.info(temp_products)
 	end
 
@@ -53,6 +55,7 @@ class SeoFiltersUpdate
 
 	def get_seofilters
 		Rails.logger.info("------- 2) start get_seofilters -------")
+		Logger.new('log/resque.log').info("2) start get_seofilters")
 		collection_filters = get_collection_filters
 		collections = get_collections
 		collection_filters.each do |el|
@@ -61,6 +64,7 @@ class SeoFiltersUpdate
 		end
 		@seofilters = collection_filters
 		Rails.logger.info("------- 2) finish get_seofilters @seofilters.count #{@seofilters.count} -------")
+		Logger.new('log/resque.log').info("2) finish get_seofilters @seofilters.count #{@seofilters.count}")
 		# Rails.logger.info(@seofilters)
 	end
 
@@ -86,10 +90,11 @@ class SeoFiltersUpdate
 
 	def calc_products_field_value_links
 		Rails.logger.info("------- 3) start calc_products_field_value_links -------")
+		Logger.new('log/resque.log').info("3) start calc_products_field_value_links")
 		products_links = Array.new
 		@products.each do |product|
 			#hardcode seo product_field_id = 31206
-			product_field_value_item = product["product_field_values"].select {|pfv| pfv["product_field_id"] == product_field_id_seo }.first
+			product_field_value_item = product["product_field_values"].select {|pfv| pfv["product_field_id"] == @product_field_id_seo }.first
 			product_field_value_item_id = 0
 			product_field_value_item_value = ""
 			if !product_field_value_item.nil?
@@ -109,7 +114,7 @@ class SeoFiltersUpdate
 		end
 		@products_links = products_links
 		Rails.logger.info("------- 3) finish calc_products_field_value_links @products_links.count #{@products_links.count} -------")
-		# Rails.logger.info(@products_links)
+		Logger.new('log/resque.log').info("3) finish calc_products_field_value_links count #{@products_links.count}")
 	end
 
 	def put_product_description_by_index(ar_ind)
@@ -146,7 +151,7 @@ class SeoFiltersUpdate
 			my_subdomain = @subdomain
 			my_pass = @pass
 			my_url = "http://" + my_subdomain + "/admin/products/" + product_id.to_s + ".json"
-			product_field_value_hash = { "product_field_id" => product_field_id_seo, "value" => product_links }
+			product_field_value_hash = { "product_field_id" => @product_field_id_seo, "value" => product_links }
 			product_field_value_hash["id"]=product_field_value_item_id if product_field_value_item_id != 0
 			json_data = {
 				"id" => product_id,
@@ -169,6 +174,7 @@ class SeoFiltersUpdate
 	end
 
 	def put_all_products
+		Logger.new('log/resque.log').info("4) start put_all_products")
 		updated_products = Array.new
 		@products_links.each_with_index do |product, index|
 			if product["need_update"] == true
@@ -179,10 +185,12 @@ class SeoFiltersUpdate
 				temp_hash["product_links"] = product["product_links"]
 				updated_products.push(temp_hash)
 				Rails.logger.info("-------  put_all_products index #{index}, product_id #{product["product_id"]}, product_title #{product["product_title"]}-------")
+				Logger.new('log/resque.log').info("4.1) #{product["product_id"]}, #{product["product_title"]}")
 				# put_product_description_by_index(index)
 				put_product_field_value_by_index(index)
 			end
 		end
+		Logger.new('log/resque.log').info("4) finish put_all_products, updated_products #{updated_products.count}")
 		return updated_products
 	end
 
@@ -251,7 +259,7 @@ class SeoFiltersUpdate
 			h
 		end
 		Rails.logger.info("------- get_collection_filters collection_filters2 #{collection_filters2.count} -------")
-		Rails.logger.info(collection_filters2)
+		# Rails.logger.info(collection_filters2)
 		collection_filters2
 	end
 
@@ -267,7 +275,7 @@ class SeoFiltersUpdate
 			collections2[el['id']] = el['url']
 		end
 		Rails.logger.info("------- get_collections collections2 #{collections2.count} -------")
-		Rails.logger.info(collections2)
+		# Rails.logger.info(collections2)
 		collections2
 	end
 
@@ -275,9 +283,9 @@ class SeoFiltersUpdate
 		'seosales'
 	end
 
-	def product_field_id_seo
-		# return 31206
-		@account.account_info.seo_field_identifier
-	end
+	# def product_field_id_seo
+	# 	# return 31206
+	# 	@account.account_info.seo_field_identifier.to_i
+	# end
 
 end

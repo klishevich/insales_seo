@@ -1,31 +1,39 @@
-<h2>Обновление всех товаров</h2>
-<%= form_tag(put_all_products2_path, method: 'post') do %>
-  <p><%= label_tag(:days, "Товары, которые были обновлены за этот период") %></p>
-  <p><%= text_field_tag(:days, 14) %></p> 
-  <p><%= submit_tag('Обновить все товары', class: 'green') %></p>
+<% if @account.allow_work? %>
+  <h2>Параметры</h2>
+    <p>INSALES ID: <%= @account.insales_id %></p>
+    <p>Автообновление включено: <%= @account.auto_update? ? 'Да' : 'Нет'%></p>
+    <p>Максимальное кол-во товаров: <%= @account.account_info.max_products_count %></p>
+    <p>Кол-во дней для автообновления: <%= @account.account_info.day_to_update %></p>
+    <p>Дата последнего обновления: <%= @account.last_seo_update %></p>
+  <hr/>
+  <h2>Обновление товаров</h2>
+  <%= form_tag(put_all_products2_path, method: 'post') do %>
+    <p><%= label_tag(:days, "Количество дней для ручного обновления") %></p>
+    <p><%= text_field_tag(:days, @account.account_info.day_to_update) %></p> 
+    <p><%= submit_tag('Обновить все товары', class: 'green') %></p>
+  <% end %>
+  <hr/>
+  <h2>Фунционал для отладки</h2>
+  <h3>Сформировать список товаров для обновления</h3>
+  <%= form_tag(seo_filters_update_path, method: 'get') do %>
+    <p><%= label_tag(:days, "Товары, которые были обновлены за этот период") %></p>
+    <p><%= text_field_tag(:days, 14) %></p>
+    <p><%= label_tag(:page, "Страница") %></p>
+    <p><%= text_field_tag(:page, 1 ) %></p>  
+    <p><%= submit_tag('Сформировать список товаров') %></p>
+  <% end %>
+  <h3>Обновить конкретный товар</h3>
+  <%= form_tag(put_one_product2_path, method: 'get') do %>
+    <p><%= label_tag(:product_id, "ID товара") %></p>
+    <p><%= text_field_tag(:product_id, nil ) %></p>
+    <p><%= submit_tag('Обновить этот товар') %></p>
+  <% end %>
+  <h3>Информация об очереди</h3>
+  <div>
+    <%= @rinfo %>
+  </div>
+<% else %>
+  <h2>Оплатите подписку</h2>
+  <div>Уважаемый клиент, для работы в <b>Приложение SEO Sales</b> необходимо оплатить подписку и настроить параметры.</div>
+  <div>Свяжитесь с администратором <a href="mailto:boss@mrjones.ru">boss@mrjones.ru</a>, в теме письма укажите "Подключение модуля SEO Sales" и укажите следующие параметры: количество товаров в вашем магазине и идентификатор поля для SEO (настройте дополнительное поле и укажите идентификатор).</div>
 <% end %>
-<hr/>
-<h2>Сформировать список товаров для обновления</h2>
-<%= form_tag(seo_filters_update_path, method: 'get') do %>
-  <p><%= label_tag(:days, "Товары, которые были обновлены за этот период") %></p>
-  <p><%= text_field_tag(:days, 14) %></p>
-  <p><%= label_tag(:page, "Страница") %></p>
-  <p><%= text_field_tag(:page, 1 ) %></p>  
-  <p><%= submit_tag('Сформировать список товаров') %></p>
-<% end %>
-<hr/>
-<h2>Обновить конкретный товар</h2>
-<%= form_tag(put_one_product2_path, method: 'get') do %>
-  <p><%= label_tag(:product_id, "ID товара") %></p>
-  <p><%= text_field_tag(:product_id, nil ) %></p>
-  <p><%= submit_tag('Обновить этот товар') %></p>
-<% end %>
-<h2>Информация об очереди</h2>
-<p><b>Общая инфа:</b></p>
-<div>
-  <%= @rinfo %>
-</div>
-<p><b>Очередь:</b></p>
-<div>
-  <%= @rqueues %>
-</div>

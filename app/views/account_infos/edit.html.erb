@@ -1,5 +1,6 @@
 <h2>Редактировать параметры аккаунта</h2>
-<div>
+<div class="account_info">
+	<%= render 'layouts/messages' %>
 	<div class="form-cont">
 		<%= simple_form_for @account_info, url: account_account_info_path do |f| %>
 			<%= f.input :seo_field_identifier %>
@@ -7,8 +8,8 @@
 		  <%= f.input :day_to_update %>
 		  <%= f.input :auto_update %>
 		  <%= f.input :allow_work %>
-		  <div class="form-group">
-		    <%= f.button :submit, value: "Сохранить", class: "btn btn-primary" %>
+		  <div class="button">
+		    <%= f.button :submit, value: "Сохранить", class: "green" %>
 		  </div>
 		<% end %>
 	</div>

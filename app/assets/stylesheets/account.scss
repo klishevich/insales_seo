@@ -6,7 +6,31 @@
 		padding: 5px;
 	}
 	td {
-		padding-left: 5px;
-		padding-right: 5px;
+		padding: 5px;
+	}
+}
+
+.account_info {
+	width: 400px;
+	.alert {
+		padding: 5px;
+		margin-bottom: 10px;
+	}
+	.alert-success {
+		background-color: #DCF1A7;
+	}
+	.input {
+		display: block;
+		padding: 5px;
+		input {
+			margin-top: 2px;
+			padding: 3px;
+		}
+		input.numeric {
+			display: block;
+		}
+	}
+	.button {
+		margin-top: 10px;
 	}
 }

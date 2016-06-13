@@ -252,7 +252,7 @@ input.small {width: 15ex}
 .success {padding:20px 10px 20px 40px;border:2px solid;background:url('/images/success.png') no-repeat 10px 20px #c5fca3;border-color:#62cf21;}
 .notice {padding:20px 10px 20px 40px;border:2px solid;background:url('/images/success.png') no-repeat 10px 20px #c5fca3;border-color:#62cf21;}
 /* TODO: change notice image */
-.error {border:solid 2px #f26666;background: url('/images/error.png') no-repeat 10px 20px #ffdbdb;font-size:85%;padding:20px 10px 20px 40px;margin:10px 0px 10px 0px;}
+.error {border:solid 2px #f26666;background: url('/images/error.png') no-repeat 10px 20px #ffdbdb;font-size:85%;padding:20px 10px 20px 40px;margin:10px 0px 10px 0px;display: block;}
 .server_message .error {margin:-10px 5px 5px;}
 
 .message .success, .message .error, .message .notice{padding:20px 10px 20px 40px;margin:0px}

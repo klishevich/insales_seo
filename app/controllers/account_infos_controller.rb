@@ -1,5 +1,5 @@
 class AccountInfosController < ApplicationController
-	# before_filter :authenticate
+	before_filter :is_admin
 
 	def index
 		@accounts = Account.all.order(:id)

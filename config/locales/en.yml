@@ -207,7 +207,7 @@ en:
   activerecord:
     attributes:
       account_info:
-        max_products_count: 'Кол-во продуктов'
+        max_products_count: 'Максимальное кол-во товаров'
         auto_update: "Автообновление вкл."
         seo_field_identifier: "ID SEO поля в InSales"
         day_to_update: 'Кол-во дней для обновления'

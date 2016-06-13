@@ -19,7 +19,7 @@ module ApplicationHelper
   end
 
   def app_name
-    'MrJones приложение'
+    'Приложение SEO Sales'
   end
 
   def show_product_url(product)

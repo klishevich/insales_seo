@@ -84,4 +84,8 @@ class ApplicationController < ActionController::Base
   def current_app
     session[:app]
   end
+
+  def is_admin
+    redirect_to root_path if !@account.admin?
+  end
 end

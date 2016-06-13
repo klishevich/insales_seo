@@ -7,8 +7,10 @@
           <th>Сайт</th>
           <th>INSALES ID</th>
           <th>ADMIN</th>
-          <th>Работа разрешена</th>
           <th>Дата создания</th>
+          <th>Работа разрешена</th>
+          <th>Автообновление включено</th>
+          <th>Последнее обновление</th>
         </tr>
       </thead>
       <tbody>
@@ -23,14 +25,10 @@
             <td><%= acc.insales_subdomain %></td>
             <td><%= acc.insales_id %></td>
             <td><%= acc.admin %></td>
-            <td>
-              <% if acc.account_info %>
-                <%= acc.account_info.allow_work %>
-              <% else %>
-                false
-              <% end %>
-            </td>
             <td><%= acc.created_at.strftime('%d.%m.%Y %T') %></td>
+            <td><%= acc.allow_work? %></td>
+            <td><%= acc.auto_update? %></td>
+            <td><%= acc.last_seo_update %></td>
           </tr>
         <% end %>
       </tbody>

@@ -20,4 +20,8 @@ InsalesApp::Application.routes.draw do
 
   get ':controller/:action/:id'
   get ':controller/:action/:id.:format'
+
+  resources :accounts, only: [:index] do
+    resource :account_info, only: [:new, :create, :show, :edit, :update]
+  end
 end

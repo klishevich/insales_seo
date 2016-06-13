@@ -1,0 +1,38 @@
+<h2>Список Аккаунтов</h2>
+<div>
+  <table class="acc_table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Сайт</th>
+          <th>INSALES ID</th>
+          <th>ADMIN</th>
+          <th>Работа разрешена</th>
+          <th>Дата создания</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @accounts.each do |acc| %>
+          <tr>
+            <td>
+              <% if acc.account_info %>
+                <%= link_to "Редактировать", edit_account_account_info_path(acc), class: "btn-sm btn-primary" %>
+              <% else %>
+                <%= link_to "Подключить", new_account_account_info_path(acc), class: "btn-sm btn-primary" %>
+              <% end %>
+            <td><%= acc.insales_subdomain %></td>
+            <td><%= acc.insales_id %></td>
+            <td><%= acc.admin %></td>
+            <td>
+              <% if acc.account_info %>
+                <%= acc.account_info.allow_work %>
+              <% else %>
+                false
+              <% end %>
+            </td>
+            <td><%= acc.created_at.strftime('%d.%m.%Y %T') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+  </table>
+</div>

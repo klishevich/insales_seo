@@ -1,0 +1,15 @@
+<h2>Редактировать параметры аккаунта</h2>
+<div>
+	<div class="form-cont">
+		<%= simple_form_for @account_info, url: account_account_info_path do |f| %>
+			<%= f.input :seo_field_identifier %>
+		  <%= f.input :max_products_count %>
+		  <%= f.input :day_to_update %>
+		  <%= f.input :auto_update %>
+		  <%= f.input :allow_work %>
+		  <div class="form-group">
+		    <%= f.button :submit, value: "Сохранить", class: "btn btn-primary" %>
+		  </div>
+		<% end %>
+	</div>
+</div>

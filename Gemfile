@@ -16,6 +16,8 @@ gem 'unicorn'
 gem 'figaro'
 gem 'resque'
 gem 'pg'
+gem 'simple_form'
+
 group :development do
     gem 'capistrano',         require: false
     gem 'capistrano-rvm',     require: false

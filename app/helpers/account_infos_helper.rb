@@ -1,0 +1,2 @@
+module AccountInfosHelper
+end

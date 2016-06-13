@@ -11,19 +11,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20111219135632) do
+ActiveRecord::Schema.define(version: 20160613062420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "account_infos", force: :cascade do |t|
+    t.integer  "account_id"
+    t.integer  "max_products_count"
+    t.boolean  "auto_update",          default: false
+    t.integer  "seo_field_identifier"
+    t.integer  "day_to_update"
+    t.boolean  "allow_work",           default: false
+    t.date     "last_seo_update"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "account_infos", ["account_id"], name: "index_account_infos_on_account_id", using: :btree
+
   create_table "accounts", force: :cascade do |t|
-    t.text     "insales_subdomain", null: false
-    t.text     "password",          null: false
-    t.integer  "insales_id",        null: false
+    t.text     "insales_subdomain",                 null: false
+    t.text     "password",                          null: false
+    t.integer  "insales_id",                        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "admin",             default: false
   end
 
   add_index "accounts", ["insales_subdomain"], name: "index_accounts_on_insales_subdomain", unique: true, using: :btree
 
+  add_foreign_key "account_infos", "accounts"
 end

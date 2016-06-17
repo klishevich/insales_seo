@@ -17,7 +17,7 @@ gem 'figaro'
 gem 'resque'
 gem 'pg'
 gem 'simple_form'
-# gem 'whenever', :require => false
+gem 'whenever', :require => false
 
 group :development do
     gem 'capistrano',         require: false

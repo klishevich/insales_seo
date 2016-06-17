@@ -70,6 +70,7 @@ GEM
       sshkit (~> 1.2)
     capistrano3-unicorn (0.2.1)
       capistrano (~> 3.1, >= 3.1.0)
+    chronic (0.10.2)
     colorize (0.7.7)
     diff-lcs (1.2.5)
     erubis (2.7.0)
@@ -204,6 +205,8 @@ GEM
       raindrops (~> 0.7)
     vegas (0.1.11)
       rack (>= 1.0.0)
+    whenever (0.9.7)
+      chronic (>= 0.6.3)
 
 PLATFORMS
   ruby
@@ -231,6 +234,7 @@ DEPENDENCIES
   sqlite3
   uglifier (>= 1.3.0)
   unicorn
+  whenever
 
 BUNDLED WITH
    1.11.2

@@ -25,7 +25,9 @@ class SeoFiltersUpdate
 		Rails.logger.info("page_params #{page_params}")
 		request = Net::HTTP::Get.new (uri.path + page_params)
 		request.basic_auth module_name, pass
+		Logger.new('log/resque.log').info("1) request  #{request}")
 		response = Net::HTTP.start(uri.host, uri.port) {|http| http.request(request)}
+		Logger.new('log/resque.log').info("1) response  #{response}")
 		parse_products = JSON.parse(response.body)
 		@products = parse_products
 		# parse_products.each {|i| @products << i }

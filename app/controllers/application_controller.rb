@@ -20,12 +20,13 @@ class ApplicationController < ActionController::Base
 
     if (current_app and current_app.authorized?) or (Rails.env == "development")
     # if true
-      Rails.logger.info('if current_app and current_app.authorized?')
-      acc = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
-      Rails.logger.info('acc')
-      Rails.logger.info(acc.insales_subdomain) if acc
+      # Rails.logger.info('if current_app and current_app.authorized?')
+      # acc = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
+      # Rails.logger.info('acc')
+      # Rails.logger.info(acc.insales_subdomain) if acc
       if (Rails.env == "development")
-        return if @account = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
+        # return if @account = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
+        return if @account = Account.find_by(insales_subdomain: 'mojos.myinsales.ru')
       else
         return if @account = Account.find_by(insales_subdomain: current_app.shop)
       end

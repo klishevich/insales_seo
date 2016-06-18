@@ -18,6 +18,14 @@ class Account < ActiveRecord::Base
   	return false
   end
 
+  def not_updated_today?
+    if self.account_info
+      return true if self.account_info.last_seo_update.nil?
+      return true if ( Time.now > self.account_info.last_seo_update  + 1.day )
+    end
+    return false
+  end
+
   def last_seo_update
   	d = nil
   	if self.account_info

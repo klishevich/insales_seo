@@ -7,7 +7,7 @@
 #
 # set :output, "/path/to/my/cron_log.log"
 #
-every 2.hours do
+every 1.hours do
   rake 'seo_filters_update'
 end
 #

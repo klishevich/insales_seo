@@ -53,10 +53,11 @@ class MainController < ApplicationController
     days_upd_since = params[:days].to_i
     page_num = 1
     el_count = 250
-    # products_updated = []
+    is_last_page = false
     while (el_count == 250 && page_num <= @account.max_page_num) do
+      is_last_page = true if page_num == @account.max_page_num
       Rails.logger.info("--------------- put_all_products2 Resque.enqueue page_num #{page_num} ---------------")
-      Resque.enqueue(ResqueSeoFiltersUpdate, subdomain, pass, product_field_id_seo, days_upd_since, page_num)
+      Resque.enqueue(ResqueSeoFiltersUpdate, subdomain, pass, product_field_id_seo, days_upd_since, page_num, is_last_page)
       page_num+=1
     end
     redirect_to '/put_all_products_result'

@@ -25,8 +25,8 @@ class ApplicationController < ActionController::Base
       # Rails.logger.info('acc')
       # Rails.logger.info(acc.insales_subdomain) if acc
       if (Rails.env == "development")
-        # return if @account = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
-        return if @account = Account.find_by(insales_subdomain: 'mojos.myinsales.ru')
+        return if @account = Account.find_by(insales_subdomain: 'menje.myinsales.ru')
+        # return if @account = Account.find_by(insales_subdomain: 'mojos.myinsales.ru')
       else
         return if @account = Account.find_by(insales_subdomain: current_app.shop)
       end

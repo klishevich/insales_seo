@@ -2,7 +2,7 @@ desc 'Enqueue SEO filters update'
 task seo_filters_update: :environment do
 	Logger.new('log/resque.log').info("------------ START CRON TASK seo_filters_update ------------")
 	Account.all.each do |acc|
-		if (acc.allow_work? && acc.auto_update? && not_updated_today?)
+		if (acc.allow_work? && acc.auto_update? && acc.not_updated_today?)
 		    page_num = 1
 		    el_count = 250
 		    is_last_page = false
